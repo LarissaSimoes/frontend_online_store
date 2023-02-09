@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={ logo } className="App-logo" alt="logo" />
-        <p>Edit src/App.js and save to reload.</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
+  state = { inputValue: '' };
 
-export default App;
+  onInputChange = ({ target }) => {
+    this.setState({ inputValue: target.value });
+  };
+
+  render() {
+    const { inputValue } = this.state;
+    return (
+      <div className="App">
+        <label htmlFor="input-products">
+          <input
+            id="input-products"
+            type="text"
+            value={ inputValue }
+            onChange={ this.onInputChange }
+          />
+        </label>
+        {
+          !inputValue && (
+            <p data-testid="home-initial-message">
+              Digite algum termo de pesquisa ou escolha uma categoria.
+            </p>
+          )
+        }
+      </div>
+    );
+  }
+}
