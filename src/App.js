@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
+import { Switch, Route } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery } from './services/api';
 import ProductCard from './components/ProductCard';
+import ShoppingCart from './pages/ShoppingCart';
+import ShoppingCartBtn from './components/ShoppingCartBtn';
 
 export default class App extends Component {
   state = {
@@ -57,6 +60,12 @@ export default class App extends Component {
               />
             )) : <h3>Nenhum produto foi encontrado</h3>}
         </div>
+        <div>
+          <Switch>
+            <Route exact path="/shopping-cart" component={ ShoppingCart } />
+          </Switch>
+        </div>
+        <ShoppingCartBtn />
       </div>
     );
   }
