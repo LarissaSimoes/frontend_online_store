@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import { Switch, Route } from 'react-router-dom';
-import { getProductsFromCategoryAndQuery, getCategories } from './services/api';
+import CategoryButton from './components/CategoryButton';
 import ProductCard from './components/ProductCard';
-import ShoppingCart from './pages/ShoppingCart';
 import ShoppingCartBtn from './components/ShoppingCartBtn';
-import ListCategories from './components/ListCategories';
+import { getCategories, getProductsFromCategoryAndQuery } from './services/api';
+import ShoppingCart from './pages/ShoppingCart';
 
 export default class App extends Component {
   state = {
@@ -15,18 +15,16 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    this.categories();
+    this.setCategories();
   }
 
   onInputChange = ({ target }) => {
     this.setState({ inputValue: target.value });
   };
 
-  categories = async () => {
-    const data = await getCategories();
-    this.setState({
-      categories: data,
-    });
+  setCategories = async () => {
+    const categories = await getCategories();
+    this.setState({ categories });
   };
 
   handleButton = async () => {
@@ -35,6 +33,11 @@ export default class App extends Component {
     this.setState({
       productsList: products.results,
     });
+  };
+
+  onCategoryClick = async (categoryId) => {
+    const products = await getProductsFromCategoryAndQuery(categoryId);
+    this.setState({ productsList: products.results });
   };
 
   render() {
@@ -82,11 +85,11 @@ export default class App extends Component {
         <h2>Categorias</h2>
         <section>
           {categories.map((categorie) => (
-            <ListCategories
-              data-testid="category"
-              id={ categorie.id }
-              name={ categorie.name }
+            <CategoryButton
               key={ categorie.id }
+              name={ categorie.name }
+              type="button"
+              onCategoryClick={ () => this.onCategoryClick(categorie.id) }
             />
           ))}
         </section>
