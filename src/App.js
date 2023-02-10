@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
-import { getProductsFromCategoryAndQuery } from './services/api';
+import { getProductsFromCategoryAndQuery, getCategories } from './services/api';
 import ProductCard from './components/ProductCard';
 import ShoppingCart from './pages/ShoppingCart';
 import ShoppingCartBtn from './components/ShoppingCartBtn';
+import ListCategories from './components/ListCategories';
 
 export default class App extends Component {
   state = {
     inputValue: '',
     productsList: [],
+    categories: [],
   };
+
+  componentDidMount() {
+    this.categories();
+  }
 
   onInputChange = ({ target }) => {
     this.setState({ inputValue: target.value });
+  };
+
+  categories = async () => {
+    const data = await getCategories();
+    this.setState({
+      categories: data,
+    });
   };
 
   handleButton = async () => {
@@ -25,7 +38,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { inputValue, productsList } = this.state;
+    const { inputValue, productsList, categories } = this.state;
     return (
       <div className="App">
         <label htmlFor="input-products">
@@ -66,6 +79,17 @@ export default class App extends Component {
           </Switch>
         </div>
         <ShoppingCartBtn />
+        <h2>Categorias</h2>
+        <section>
+          {categories.map((categorie) => (
+            <ListCategories
+              data-testid="category"
+              id={ categorie.id }
+              name={ categorie.name }
+              key={ categorie.id }
+            />
+          ))}
+        </section>
       </div>
     );
   }
