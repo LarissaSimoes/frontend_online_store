@@ -7,10 +7,8 @@ class App extends React.Component {
   render() {
     return (
       <Switch>
-        <Switch>
-          <Route path="/shopping-cart" component={ ShoppingCart } />
-          <Route exact path="/" component={ Home } />
-        </Switch>
+        <Route path="/shopping-cart" component={ ShoppingCart } />
+        <Route exact path="/" component={ Home } />
       </Switch>
     );
   }
