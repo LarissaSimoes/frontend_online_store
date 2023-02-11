@@ -37,8 +37,10 @@ export default class Home extends Component {
   };
 
   setCategories = async () => {
+    this.switchLoading();
     const categories = await getCategories();
     this.setState({ categories });
+    this.switchLoading();
   };
 
   handleSubmit = async (event) => {
@@ -61,6 +63,7 @@ export default class Home extends Component {
     const { inputValue, productList, categories, noProductFound, isLoading } = this.state;
     return (
       <div className="App">
+        {isLoading && <Loading />}
         <QueryForm
           inputValue={ inputValue }
           onInputChange={ this.onInputChange }
@@ -74,17 +77,14 @@ export default class Home extends Component {
         <ul>
           { productList.map((product) => (
             <li key={ product.id }>
-              <ProductCard
-                key={ product.id }
-                product={ product }
-              />
+              <ProductCard key={ product.id } product={ product } />
             </li>
           )) }
           {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
         </ul>
         <ShoppingCartBtn />
         <h3>Categorias</h3>
-        <section>
+        <aside>
           { categories.map((category) => (
             <CategoryButton
               key={ category.id }
@@ -92,8 +92,7 @@ export default class Home extends Component {
               onCategoryClick={ () => this.onCategoryClick(category.id) }
             />
           )) }
-        </section>
-        {isLoading && <Loading />}
+        </aside>
       </div>
     );
   }

@@ -16,9 +16,9 @@ class ProductCard extends Component {
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    thumbnail: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    price: PropTypes.number,
+    thumbnail: PropTypes.string,
   }).isRequired,
 };
 
