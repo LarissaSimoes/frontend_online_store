@@ -9,7 +9,7 @@ import { getCategories, getProductsFromCategoryAndQuery } from '../services/api'
 export default class Home extends Component {
   state = {
     inputValue: '',
-    productList: [],
+    products: [],
     categories: [],
     noProductFound: false,
     isLoading: false,
@@ -28,9 +28,9 @@ export default class Home extends Component {
     this.setState({ isLoading: !isLoading });
   };
 
-  setProductList = (products) => {
-    if (products.results.length > 0) {
-      this.setState({ productList: products.results, noProductFound: false });
+  setProducts = (products) => {
+    if (products.length > 0) {
+      this.setState({ products, noProductFound: false });
       return;
     }
     this.setState({ noProductFound: true });
@@ -47,20 +47,53 @@ export default class Home extends Component {
     event.preventDefault();
     this.switchLoading();
     const { inputValue } = this.state;
-    const products = await getProductsFromCategoryAndQuery('', inputValue);
-    this.setProductList(products);
+    const searchData = await getProductsFromCategoryAndQuery('', inputValue);
+    this.setProducts(searchData.results);
     this.switchLoading();
   };
 
   onCategoryClick = async (categoryId) => {
     this.switchLoading();
-    const products = await getProductsFromCategoryAndQuery(categoryId);
-    this.setProductList(products);
+    const searchData = await getProductsFromCategoryAndQuery(categoryId);
+    this.setProducts(searchData.results);
     this.switchLoading();
   };
 
   render() {
-    const { inputValue, productList, categories, noProductFound, isLoading } = this.state;
+    const { inputValue, products, categories, noProductFound, isLoading } = this.state;
+
+    const initialMessageElement = (
+      <h3 data-testid="home-initial-message">
+        Digite algum termo de pesquisa ou escolha uma categoria.
+      </h3>
+    );
+
+    const productListElement = (
+      <section>
+        {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
+        <ul>
+          {products.map((product) => (
+            <li key={ product.id }>
+              <ProductCard key={ product.id } product={ product } />
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+
+    const categoriesElement = (
+      <aside>
+        <h3>Categorias</h3>
+        {categories.map((category) => (
+          <CategoryButton
+            key={ category.id }
+            name={ category.name }
+            onCategoryClick={ () => this.onCategoryClick(category.id) }
+          />
+        ))}
+      </aside>
+    );
+
     return (
       <div className="App">
         {isLoading && <Loading />}
@@ -69,30 +102,10 @@ export default class Home extends Component {
           onInputChange={ this.onInputChange }
           handleSubmit={ this.handleSubmit }
         />
-        { !inputValue && (
-          <p data-testid="home-initial-message">
-            Digite algum termo de pesquisa ou escolha uma categoria.
-          </p>
-        ) }
-        <ul>
-          { productList.map((product) => (
-            <li key={ product.id }>
-              <ProductCard key={ product.id } product={ product } />
-            </li>
-          )) }
-          {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
-        </ul>
+        {!inputValue && initialMessageElement}
+        {productListElement}
         <ShoppingCartBtn />
-        <h3>Categorias</h3>
-        <aside>
-          { categories.map((category) => (
-            <CategoryButton
-              key={ category.id }
-              name={ category.name }
-              onCategoryClick={ () => this.onCategoryClick(category.id) }
-            />
-          )) }
-        </aside>
+        {categoriesElement}
       </div>
     );
   }
