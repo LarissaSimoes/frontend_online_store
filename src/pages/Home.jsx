@@ -23,40 +23,33 @@ export default class Home extends Component {
     this.setState({ inputValue: target.value });
   };
 
-  switchLoading = () => {
-    const { isLoading } = this.state;
-    this.setState({ isLoading: !isLoading });
-  };
-
   setProducts = (products) => {
     if (products.length > 0) {
-      this.setState({ products, noProductFound: false });
-      return;
+      this.setState({ noProductFound: false });
+    } else {
+      this.setState({ noProductFound: true });
     }
-    this.setState({ noProductFound: true });
+    this.setState({ products, isLoading: false });
   };
 
   setCategories = async () => {
-    this.switchLoading();
+    this.setState({ isLoading: true });
     const categories = await getCategories();
-    this.setState({ categories });
-    this.switchLoading();
+    this.setState({ categories, isLoading: false });
   };
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    this.switchLoading();
+    this.setState({ isLoading: true });
     const { inputValue } = this.state;
     const searchData = await getProductsFromCategoryAndQuery('', inputValue);
     this.setProducts(searchData.results);
-    this.switchLoading();
   };
 
   onCategoryClick = async (categoryId) => {
-    this.switchLoading();
+    this.setState({ isLoading: true });
     const searchData = await getProductsFromCategoryAndQuery(categoryId);
     this.setProducts(searchData.results);
-    this.switchLoading();
   };
 
   render() {
