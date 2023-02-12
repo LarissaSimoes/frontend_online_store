@@ -103,9 +103,9 @@ export default class Home extends Component {
           handleSubmit={ this.handleSubmit }
         />
         {!inputValue && initialMessageElement}
-        {productListElement}
         <ShoppingCartBtn />
         {categoriesElement}
+        {productListElement}
       </div>
     );
   }
