@@ -1,6 +1,5 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { getProductById } from '../services/api';
 
 class ProductDetail extends React.Component {
@@ -9,51 +8,57 @@ class ProductDetail extends React.Component {
   };
 
   componentDidMount() {
-    const { id: { match: { param } } } = this.props;
-    this.getProductById(param.id);
+    this.setSelectedProduct();
   }
 
-  getProductById = async (productId) => {
-    const response = await getProductById(productId);
+  setSelectedProduct = async () => {
+    const { match: { params: { id } } } = this.props;
+
+    const product = await getProductById(id);
     this.setState({
-      selectedProduct: response,
+      selectedProduct: product,
     });
+  };
+
+  onAddtoCartButton = () => {
+    const { history } = this.props;
+
+    history.push('/shopping-cart');
   };
 
   render() {
     const { selectedProduct } = this.state;
+    const { title, thumbnail, price } = selectedProduct;
 
     return (
       <div>
         <p data-testid="product-detail-name">
-          {selectedProduct.title}
+          {title}
         </p>
         <img
-          src={ selectedProduct.thumbnail }
-          alt={ selectedProduct.title }
+          src={ thumbnail }
+          alt={ title }
           data-testid="product-detail-image"
         />
-        <p data-testid="product-detail-price">{selectedProduct.price}</p>
+        <p data-testid="product-detail-price">{ price }</p>
 
-        <Link to="/shopping-cart">
-          <button
-            type="button"
-            data-testid="shopping-cart-button"
-          >
-            Carrinho de Compras
-          </button>
-        </Link>
+        <button
+          type="button"
+          data-testid="shopping-cart-button"
+          onClick={ this.onAddtoCartButton }
+        >
+          Carrinho de Compras
+        </button>
       </div>
     );
   }
 }
 
 ProductDetail.propTypes = {
-  id: PropTypes.shape({
-    match: PropTypes.shape({
-      param: PropTypes.shape({
-        id: PropTypes.string,
-      }),
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
     }),
   }).isRequired,
 };
