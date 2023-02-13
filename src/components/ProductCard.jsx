@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 class ProductCard extends Component {
   render() {
@@ -8,7 +8,7 @@ class ProductCard extends Component {
       <div data-testid="product">
         <h3>{ title }</h3>
         <img src={ thumbnail } alt={ title } />
-        <p>{ price }</p>
+        <p>{`R$ ${price}`}</p>
       </div>
     );
   }
@@ -16,9 +16,9 @@ class ProductCard extends Component {
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    thumbnail: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    price: PropTypes.number,
+    thumbnail: PropTypes.string,
   }).isRequired,
 };
 
