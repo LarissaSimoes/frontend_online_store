@@ -39,4 +39,5 @@ class ShoppingCart extends Component {
   }
 }
 
+// Tentativa de correção de erro req 9
 export default ShoppingCart;
