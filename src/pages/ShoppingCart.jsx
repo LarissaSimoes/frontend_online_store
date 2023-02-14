@@ -8,13 +8,14 @@ class ShoppingCart extends Component {
   }
 
   shoppingCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart'));
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     console.log();
     this.setState({ cartProducts: cart });
   };
 
   render() {
     const { cartProducts } = this.state;
+    console.log(cartProducts);
 
     const emptyCartElement = cartProducts.length === 0 && (
       <h3 data-testid="shopping-cart-empty-message">
