@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import AvaliationCard from '../components/AvaliationCard';
 import { getProductById } from '../services/api';
 
 class ProductDetail extends React.Component {
@@ -61,6 +62,7 @@ class ProductDetail extends React.Component {
         >
           Carrinho de Compras
         </button>
+        <AvaliationCard productId={ selectedProduct.id } />
       </div>
     );
   }
