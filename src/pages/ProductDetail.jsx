@@ -26,9 +26,15 @@ class ProductDetail extends React.Component {
     history.push('/shopping-cart');
   };
 
+  handleAddToCart = () => {
+    const { selectedProduct: { title, thumbnail, price } } = this.state;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push({ name: title, image: thumbnail, value: price, qt: 1 });
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   render() {
-    const { selectedProduct } = this.state;
-    const { title, thumbnail, price } = selectedProduct;
+    const { selectedProduct: { title, thumbnail, price } } = this.state;
 
     return (
       <div>
@@ -41,7 +47,13 @@ class ProductDetail extends React.Component {
           data-testid="product-detail-image"
         />
         <p data-testid="product-detail-price">{ price }</p>
-
+        <button
+          data-testid="product-detail-add-to-cart"
+          type="button"
+          onClick={ this.handleAddToCart }
+        >
+          Adicionar produto ao carrinho
+        </button>
         <button
           type="button"
           data-testid="shopping-cart-button"

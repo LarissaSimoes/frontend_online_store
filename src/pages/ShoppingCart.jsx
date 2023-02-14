@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import CartProductCard from '../components/CartProductCard';
+// import CartProductCard from '../components/CartProductCard';
 
 class ShoppingCart extends Component {
   state = { cartProducts: [] };
 
+  componentDidMount() {
+    this.shoppingCart();
+  }
+
+  shoppingCart = () => {
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    this.setState({ cartProducts: cart });
+  };
+
   render() {
-    const { cartProducts } = this.state;
+    const { cartProducts: { name, qt } } = this.state;
 
     const emptyCartElement = cartProducts.length === 0 && (
       <h3 data-testid="shopping-cart-empty-message">
@@ -17,7 +26,8 @@ class ShoppingCart extends Component {
       <ul>
         {cartProducts.map((product) => (
           <li key={ product.id }>
-            <CartProductCard key={ product.id } product={ product } />
+            <h3 data-testid="shopping-cart-product-name">{ name }</h3>
+            <h3 data-testid="shopping-cart-product-quantity">{ qt }</h3>
           </li>
         ))}
       </ul>
