@@ -14,7 +14,6 @@ class ShoppingCart extends Component {
 
   render() {
     const { cartProducts } = this.state;
-
     const emptyCartElement = cartProducts.length === 0 && (
       <h3 data-testid="shopping-cart-empty-message">
         Seu carrinho está vazio
@@ -24,10 +23,14 @@ class ShoppingCart extends Component {
     const cartProductsElement = cartProducts.map((product, index) => (
       <li key={ index }>
         <h3 data-testid="shopping-cart-product-name">{ product.name }</h3>
+        <img src={ product.image } alt={ product.name } />
+        <h3>
+          R$
+          {product.value}
+        </h3>
         <h3 data-testid="shopping-cart-product-quantity">{ product.qt }</h3>
       </li>
     ));
-
     return (
       <div>
         {emptyCartElement}

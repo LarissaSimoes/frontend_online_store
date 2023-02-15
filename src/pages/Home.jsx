@@ -52,6 +52,13 @@ export default class Home extends Component {
     this.setProducts(searchData.results);
   };
 
+  handleAddToCart = (product) => {
+    const { title, thumbnail, price } = product;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push({ name: title, image: thumbnail, value: price, qt: 1 });
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   render() {
     const { inputValue, products, categories, noProductFound, isLoading } = this.state;
 
@@ -68,6 +75,12 @@ export default class Home extends Component {
           {products.map((product) => (
             <li key={ product.id }>
               <ProductCard key={ product.id } product={ product } />
+              <button
+                data-testid="product-add-to-cart"
+                onClick={ () => this.handleAddToCart(product) }
+              >
+                Adicionar
+              </button>
             </li>
           ))}
         </ul>
