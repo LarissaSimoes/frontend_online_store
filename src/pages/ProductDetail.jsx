@@ -35,7 +35,7 @@ class ProductDetail extends React.Component {
   };
 
   render() {
-    const { selectedProduct: { title, thumbnail, price } } = this.state;
+    const { selectedProduct: { title, thumbnail, price, id } } = this.state;
 
     return (
       <div>
@@ -62,7 +62,7 @@ class ProductDetail extends React.Component {
         >
           Carrinho de Compras
         </button>
-        <AvaliationCard productId={ selectedProduct.id } />
+        <AvaliationCard productId={ id } />
       </div>
     );
   }
