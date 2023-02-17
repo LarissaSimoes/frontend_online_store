@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import CartButton from '../components/CartButton';
 import CategoryButton from '../components/CategoryButton';
 import Loading from '../components/Loading';
 import ProductCard from '../components/ProductCard';
 import QueryForm from '../components/QueryForm';
-import ShoppingCartBtn from '../components/ShoppingCartBtn';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class Home extends Component {
@@ -87,7 +87,7 @@ export default class Home extends Component {
           handleSubmit={ this.handleSubmit }
         />
         {!inputValue && initialMessageElement}
-        <ShoppingCartBtn />
+        <CartButton />
         <aside>
           <h3>Categorias</h3>
           {categoriesElement}

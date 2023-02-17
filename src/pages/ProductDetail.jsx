@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AvaliationCard from '../components/AvaliationCard';
+import CartButton from '../components/CartButton';
 import ProductCard from '../components/ProductCard';
-import ShoppingCartBtn from '../components/ShoppingCartBtn';
 import { getProductById } from '../services/api';
 
 class ProductDetail extends React.Component {
@@ -30,7 +30,7 @@ class ProductDetail extends React.Component {
           buttonId="product-detail-add-to-cart"
           product={ product }
         />
-        <ShoppingCartBtn />
+        <CartButton />
         {Object.keys(product).length > 0 && <AvaliationCard productId={ product.id } />}
       </div>
     );

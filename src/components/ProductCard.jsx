@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 import { saveProductToCart } from '../services/cartFunctions';
 
 class ProductCard extends Component {
-  onAddToCartClick = (product) => {
-    saveProductToCart(product);
-  };
+  onAddToCartClick = (product) => saveProductToCart(product);
 
   render() {
     const { titleId, imageId, priceId, buttonId, product } = this.props;
@@ -14,11 +12,7 @@ class ProductCard extends Component {
 
     return (
       <div data-testid="product">
-        <Link
-          to={ `/ProductDetail/${id}` }
-          id={ id }
-          data-testid="product-detail-link"
-        >
+        <Link to={ `/product/${id}` } data-testid="product-detail-link">
           <h4 data-testid={ titleId }>{ title }</h4>
           <img src={ thumbnail } alt={ title } data-testid={ imageId } />
           <h5 data-testid={ priceId }>{`R$ ${price}`}</h5>
