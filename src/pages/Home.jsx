@@ -26,9 +26,8 @@ export default class Home extends Component {
   setProducts = (products) => {
     if (products.length > 0) {
       this.setState({ noProductFound: false });
-    } else {
-      this.setState({ noProductFound: true });
-    }
+    } else this.setState({ noProductFound: true });
+
     this.setState({ products, isLoading: false });
   };
 
@@ -52,13 +51,6 @@ export default class Home extends Component {
     this.setProducts(searchData.results);
   };
 
-  handleAddToCart = (product) => {
-    const { title, thumbnail, price } = product;
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push({ name: title, image: thumbnail, value: price, qt: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
-  };
-
   render() {
     const { inputValue, products, categories, noProductFound, isLoading } = this.state;
 
@@ -68,37 +60,23 @@ export default class Home extends Component {
       </h3>
     );
 
-    const productListElement = (
-      <section>
-        {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
-        <ul>
-          {products.map((product) => (
-            <li key={ product.id }>
-              <ProductCard key={ product.id } product={ product } />
-              <button
-                data-testid="product-add-to-cart"
-                onClick={ () => this.handleAddToCart(product) }
-              >
-                Adicionar
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
+    const productListElement = products.length > 0 && products.map((product) => (
+      <li key={ product.id }>
+        <ProductCard
+          key={ product.id }
+          product={ product }
+          buttonId="product-add-to-cart"
+        />
+      </li>
+    ));
 
-    const categoriesElement = (
-      <aside>
-        <h3>Categorias</h3>
-        {categories.map((category) => (
-          <CategoryButton
-            key={ category.id }
-            name={ category.name }
-            onCategoryClick={ () => this.onCategoryClick(category.id) }
-          />
-        ))}
-      </aside>
-    );
+    const categoriesElement = categories.map(({ id, name }) => (
+      <CategoryButton
+        key={ id }
+        name={ name }
+        onCategoryClick={ () => this.onCategoryClick(id) }
+      />
+    ));
 
     return (
       <div className="App">
@@ -110,8 +88,12 @@ export default class Home extends Component {
         />
         {!inputValue && initialMessageElement}
         <ShoppingCartBtn />
-        {categoriesElement}
-        {productListElement}
+        <aside>
+          <h3>Categorias</h3>
+          {categoriesElement}
+        </aside>
+        <ul>{productListElement}</ul>
+        {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
       </div>
     );
   }

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import ProductCard from '../components/ProductCard';
+import { getCartProducts } from '../services/cartFunctions';
 
 class ShoppingCart extends Component {
   state = { cartProducts: [] };
 
   componentDidMount() {
-    this.shoppingCart();
+    this.setCartProducts();
   }
 
-  shoppingCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    this.setState({ cartProducts: cart });
+  setCartProducts = () => {
+    const cartProducts = getCartProducts();
+    this.setState({ cartProducts });
   };
 
   render() {
@@ -20,15 +22,13 @@ class ShoppingCart extends Component {
       </h3>
     );
 
-    const cartProductsElement = cartProducts.map((product, index) => (
-      <li key={ index }>
-        <h3 data-testid="shopping-cart-product-name">{ product.name }</h3>
-        <img src={ product.image } alt={ product.name } />
-        <h3>
-          R$
-          {product.value}
-        </h3>
-        <h3 data-testid="shopping-cart-product-quantity">{ product.qt }</h3>
+    const cartProductsElement = cartProducts.length > 0 && cartProducts.map((product) => (
+      <li key={ product.id }>
+        <ProductCard
+          product={ product }
+          titleId="shopping-cart-product-name"
+        />
+        <span data-testid="shopping-cart-product-quantity">{ product.quantity }</span>
       </li>
     ));
     return (
@@ -42,5 +42,4 @@ class ShoppingCart extends Component {
   }
 }
 
-// Tentativa de correção de erro req 9
 export default ShoppingCart;
