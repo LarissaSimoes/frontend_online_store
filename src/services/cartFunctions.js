@@ -17,10 +17,12 @@ export const saveProductToCart = (product) => {
   if (!product) throw new Error('Você deve fornecer um produto');
 
   const cartProducts = getCartProducts();
-  if (cartProducts.some((cartProduct) => cartProduct.id === product.id)) {
-    const productIndex = cartProducts
-      .findIndex((cartProduct) => cartProduct.id === product.id);
-    cartProducts.splice(productIndex, 1);
+  const indexProduct = cartProducts.findIndex(
+    (cartProduct) => cartProduct.id === product.id,
+  );
+
+  if (indexProduct >= 0) {
+    cartProducts.splice(indexProduct, 1);
     product.quantity += 1;
   } else product.quantity = 1;
 

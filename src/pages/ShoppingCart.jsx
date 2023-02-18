@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ProductCard from '../components/ProductCard';
 import { getCartProducts } from '../services/cartFunctions';
 
-class Cart extends Component {
+class ShoppingCart extends Component {
   state = { cartProducts: [] };
 
   componentDidMount() {
@@ -42,4 +42,4 @@ class Cart extends Component {
   }
 }
 
-export default Cart;
+export default ShoppingCart;

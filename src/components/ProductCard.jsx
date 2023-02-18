@@ -19,6 +19,7 @@ class ProductCard extends Component {
         </Link>
         <button
           data-testid={ buttonId }
+          hidden={ !buttonId } // Botão deve aparecer ou não
           type="button"
           onClick={ () => this.onAddToCartClick(product) }
         >
