@@ -58,6 +58,7 @@ class ShoppingCart extends Component {
         <button
           data-testid="product-decrease-quantity"
           type="button"
+          disabled={ product.quantity === 1 }
           onClick={ () => this.onDecreaseQuantityClick(product) }
         >
           -
