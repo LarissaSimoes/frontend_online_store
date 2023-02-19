@@ -4,9 +4,10 @@ import AvaliationCard from '../components/AvaliationCard';
 import CartButton from '../components/CartButton';
 import ProductCard from '../components/ProductCard';
 import { getProductById } from '../services/api';
+import Loading from '../components/Loading';
 
 class ProductDetail extends React.Component {
-  state = { product: {} };
+  state = { product: {}, isLoading: true };
 
   componentDidMount() {
     this.setProduct();
@@ -16,20 +17,22 @@ class ProductDetail extends React.Component {
     const { match: { params: { id } } } = this.props;
 
     const product = await getProductById(id);
-    this.setState({ product });
+    this.setState({ product, isLoading: false });
   };
 
   render() {
-    const { product } = this.state;
+    const { product, isLoading } = this.state;
     return (
       <div>
-        <ProductCard
-          titleId="product-detail-name"
-          imageId="product-detail-image"
-          priceId="product-detail-price"
-          buttonId="product-detail-add-to-cart"
-          product={ product }
-        />
+        {isLoading ? <Loading /> : (
+          <ProductCard
+            titleId="product-detail-name"
+            imageId="product-detail-image"
+            priceId="product-detail-price"
+            buttonId="product-detail-add-to-cart"
+            product={ product }
+          />
+        )}
         <CartButton />
         {Object.keys(product).length > 0 && <AvaliationCard productId={ product.id } />}
       </div>

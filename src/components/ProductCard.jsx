@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 import { saveProductToCart } from '../services/cartFunctions';
 
 class ProductCard extends Component {
-  onAddToCartClick = (product) => saveProductToCart(product);
+  onAddToCartClick = (product) => {
+    if (product.quantity) product.quantity += 1; else product.quantity = 1;
+    saveProductToCart(product);
+  };
 
   render() {
     const { titleId, imageId, priceId, buttonId, product } = this.props;

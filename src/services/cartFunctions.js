@@ -22,9 +22,10 @@ export const saveProductToCart = (product) => {
   );
 
   if (indexProduct >= 0) {
-    cartProducts.splice(indexProduct, 1);
-    product.quantity += 1;
-  } else product.quantity = 1;
+    cartProducts[indexProduct] = product;
+    localStorage.setItem(CART_PRODUCTS_KEY, JSON.stringify(cartProducts));
+    return;
+  }
 
   const newCartProducts = [...cartProducts, product];
   localStorage.setItem(CART_PRODUCTS_KEY, JSON.stringify(newCartProducts));
@@ -37,8 +38,10 @@ export const saveProductToCart = (product) => {
 export const removeProductFromCart = (product) => {
   if (!product) throw new Error('Você deve fornecer um produto');
 
-  const cartProducts = [...getCartProducts()];
-  const indexProduct = cartProducts.indexOf(product);
+  const cartProducts = getCartProducts();
+  const indexProduct = cartProducts.findIndex(
+    (cartProduct) => cartProduct.id === product.id,
+  );
   cartProducts.splice(indexProduct, 1);
   localStorage.setItem(CART_PRODUCTS_KEY, JSON.stringify(cartProducts));
 };
