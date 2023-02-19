@@ -25,9 +25,8 @@ class ShoppingCart extends Component {
   };
 
   onDecreaseQuantityClick = (product) => {
-    if (product.quantity === 1) {
-      return;
-    }
+    if (product.quantity === 1) return;
+
     product.quantity -= 1;
     saveProductToCart(product);
     this.setCartProducts();
