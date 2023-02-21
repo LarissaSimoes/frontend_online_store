@@ -1,67 +1,40 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AvaliationCard from '../components/AvaliationCard';
+import CartButton from '../components/CartButton';
+import ProductCard from '../components/ProductCard';
 import { getProductById } from '../services/api';
+import Loading from '../components/Loading';
 
 class ProductDetail extends React.Component {
-  state = {
-    selectedProduct: [],
-  };
+  state = { product: {}, isLoading: true };
 
   componentDidMount() {
-    this.setSelectedProduct();
+    this.setProduct();
   }
 
-  setSelectedProduct = async () => {
+  setProduct = async () => {
     const { match: { params: { id } } } = this.props;
 
     const product = await getProductById(id);
-    this.setState({
-      selectedProduct: product,
-    });
-  };
-
-  onAddtoCartButton = () => {
-    const { history } = this.props;
-
-    history.push('/shopping-cart');
-  };
-
-  handleAddToCart = () => {
-    const { selectedProduct: { title, thumbnail, price } } = this.state;
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push({ name: title, image: thumbnail, value: price, qt: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
+    this.setState({ product, isLoading: false });
   };
 
   render() {
-    const { selectedProduct: { title, thumbnail, price, id } } = this.state;
+    const { product, isLoading } = this.state;
     return (
       <div>
-        <p data-testid="product-detail-name">
-          {title}
-        </p>
-        <img
-          src={ thumbnail }
-          alt={ title }
-          data-testid="product-detail-image"
-        />
-        <p data-testid="product-detail-price">{ price }</p>
-        <button
-          data-testid="product-detail-add-to-cart"
-          type="button"
-          onClick={ this.handleAddToCart }
-        >
-          Adicionar produto ao carrinho
-        </button>
-        <button
-          type="button"
-          data-testid="shopping-cart-button"
-          onClick={ this.onAddtoCartButton }
-        >
-          Carrinho de Compras
-        </button>
-        <AvaliationCard productId={ id } />
+        {isLoading ? <Loading /> : (
+          <ProductCard
+            titleId="product-detail-name"
+            imageId="product-detail-image"
+            priceId="product-detail-price"
+            buttonId="product-detail-add-to-cart"
+            product={ product }
+          />
+        )}
+        <CartButton />
+        {Object.keys(product).length > 0 && <AvaliationCard productId={ product.id } />}
       </div>
     );
   }
