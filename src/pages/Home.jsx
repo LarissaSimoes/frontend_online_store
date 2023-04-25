@@ -5,6 +5,7 @@ import Loading from '../components/Loading';
 import ProductCard from '../components/ProductCard';
 import QueryForm from '../components/QueryForm';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import { getCartProducts } from '../services/cartFunctions';
 
 export default class Home extends Component {
   state = {
@@ -13,11 +14,18 @@ export default class Home extends Component {
     categories: [],
     noProductFound: false,
     isLoading: false,
+    cartTotal: 0,
   };
 
   componentDidMount() {
     this.setCategories();
   }
+
+  setTotal = () => {
+    const cartProducts = getCartProducts();
+    const cartTotal = cartProducts.reduce((acc, cur) => acc + cur.quantity, 0);
+    this.setState({ cartTotal });
+  };
 
   onInputChange = ({ target }) => {
     this.setState({ inputValue: target.value });
@@ -34,7 +42,7 @@ export default class Home extends Component {
   setCategories = async () => {
     this.setState({ isLoading: true });
     const categories = await getCategories();
-    this.setState({ categories, isLoading: false });
+    this.setState({ categories, isLoading: false }, this.setTotal);
   };
 
   handleSubmit = async (event) => {
@@ -52,7 +60,8 @@ export default class Home extends Component {
   };
 
   render() {
-    const { inputValue, products, categories, noProductFound, isLoading } = this.state;
+    const { inputValue, products, categories,
+      noProductFound, isLoading, cartTotal } = this.state;
 
     const initialMessageElement = (
       <h3 data-testid="home-initial-message">
@@ -87,12 +96,16 @@ export default class Home extends Component {
           handleSubmit={ this.handleSubmit }
         />
         {!inputValue && initialMessageElement}
-        <CartButton />
+        <CartButton
+          cartTotal={ cartTotal }
+        />
         <aside>
           <h3>Categorias</h3>
           {categoriesElement}
         </aside>
-        <ul>{productListElement}</ul>
+        <div onClick={ this.setTotal } aria-hidden="true">
+          <ul>{productListElement}</ul>
+        </div>
         {noProductFound && <h3>Nenhum produto foi encontrado</h3>}
       </div>
     );

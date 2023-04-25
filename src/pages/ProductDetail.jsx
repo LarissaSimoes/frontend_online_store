@@ -1,27 +1,34 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AvaliationCard from '../components/AvaliationCard';
-import CartButton from '../components/CartButton';
 import ProductCard from '../components/ProductCard';
 import { getProductById } from '../services/api';
 import Loading from '../components/Loading';
+import CartButton from '../components/CartButton';
+import { getCartProducts } from '../services/cartFunctions';
 
 class ProductDetail extends React.Component {
-  state = { product: {}, isLoading: true };
+  state = { product: {}, isLoading: true, cartTotal: 0 };
 
   componentDidMount() {
     this.setProduct();
   }
 
+  setTotal = () => {
+    const cartProducts = getCartProducts();
+    const cartTotal = cartProducts.reduce((acc, cur) => acc + cur.quantity, 0);
+    this.setState({ cartTotal });
+  };
+
   setProduct = async () => {
     const { match: { params: { id } } } = this.props;
 
     const product = await getProductById(id);
-    this.setState({ product, isLoading: false });
+    this.setState({ product, isLoading: false }, this.setTotal);
   };
 
   render() {
-    const { product, isLoading } = this.state;
+    const { product, isLoading, cartTotal } = this.state;
     return (
       <div>
         {isLoading ? <Loading /> : (
@@ -33,8 +40,10 @@ class ProductDetail extends React.Component {
             product={ product }
           />
         )}
-        <CartButton />
         {Object.keys(product).length > 0 && <AvaliationCard productId={ product.id } />}
+        <CartButton
+          cartTotal={ cartTotal }
+        />
       </div>
     );
   }

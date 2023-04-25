@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CartButton from '../components/CartButton';
 import ProductCard from '../components/ProductCard';
 import {
   getCartProducts,
@@ -7,15 +8,22 @@ import {
 } from '../services/cartFunctions';
 
 class ShoppingCart extends Component {
-  state = { cartProducts: [] };
+  state = { cartProducts: [], cartTotal: 0 };
 
   componentDidMount() {
     this.setCartProducts();
   }
 
+  setTotal = () => {
+    const cartProducts = getCartProducts();
+    const cartTotal = cartProducts.reduce((acc, cur) => acc + cur.quantity, 0);
+    console.log(cartTotal);
+    this.setState({ cartTotal });
+  };
+
   setCartProducts = () => {
     const cartProducts = getCartProducts();
-    this.setState({ cartProducts });
+    this.setState({ cartProducts }, this.setTotal);
   };
 
   onIncreaseQuantityClick = (product) => {
@@ -38,7 +46,7 @@ class ShoppingCart extends Component {
   };
 
   render() {
-    const { cartProducts } = this.state;
+    const { cartProducts, cartTotal } = this.state;
     const emptyCartElement = cartProducts.length === 0 && (
       <h3 data-testid="shopping-cart-empty-message">
         Seu carrinho está vazio
@@ -75,6 +83,9 @@ class ShoppingCart extends Component {
     ));
     return (
       <div>
+        <CartButton
+          cartTotal={ cartTotal }
+        />
         {emptyCartElement}
         <ul>
           {cartProductsElement}
